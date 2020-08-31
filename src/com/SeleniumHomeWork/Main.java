@@ -18,8 +18,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.devtools.io.model.StreamHandle;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.concurrent.TimeUnit;
 import java.util.List;
@@ -28,6 +30,7 @@ public class Main {
 
     public static void main(String[] args){
         User user1 = new User();
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Karyusha\\PortablePrograms\\SeleniumChromeDriver\\chromedriver.exe");
         ChromeDriver driver = new ChromeDriver();
         driver.get("https://user-data.hillel.it/html/registration.html");
         driver.findElement(By.cssSelector(".registration")).click();
@@ -61,7 +64,7 @@ public class Main {
 
         driver.findElement(By.cssSelector("#button_account")).click();
 
-        try { Thread.sleep(5000); } catch (Exception e) { System.out.println(e); }
+        try { Thread.sleep(3000); } catch (Exception e) { System.out.println(e); }
 
         // Switching to Alert
         Alert alert = driver.switchTo().alert();
@@ -97,12 +100,6 @@ public class Main {
         element.sendKeys(user1.lastName);
 
         Select positionSel = new Select(driver.findElement(By.cssSelector("#position")));
-/*        positionSel.selectByIndex(0);
-        try { Thread.sleep(3000); } catch (Exception e) { System.out.println(e); }
-        positionSel.selectByIndex(1);
-        try { Thread.sleep(3000); } catch (Exception e) { System.out.println(e); }
-        positionSel.selectByIndex(2);
-        try { Thread.sleep(3000); } catch (Exception e) { System.out.println(e); }*/
 
         positionSel.selectByIndex(user1.position - 1);
 
@@ -114,11 +111,13 @@ public class Main {
 
         driver.findElement(By.cssSelector("#search")).click();
 
-        //Row Count	in WebTable
-        WebElement table = driver.findElement(By.cssSelector("#table"));
-        List<WebElement> row = table.findElements(By.tagName("tr"));
-        System.out.println("Total Number of Rows = " + row.size());
-
-
+        new WebDriverWait(driver, 5000).until(ExpectedConditions.numberOfElementsToBe(By.cssSelector("table>tr"),1));
+        int tableRows = driver.findElements(By.cssSelector("table>tr")).size();
+        String siteUserEmail = driver.findElement(By.cssSelector("tr>td:nth-child(3)")).getText();
+        System.out.println("Total Number of Rows = " + tableRows);
+        System.out.println("Found email in table = " + siteUserEmail);
+        if (tableRows == 1 && siteUserEmail.equals(user1.email)) {
+            System.out.println("Our user " + user1.email + " is unique, was registrated and found in UserData");
+        }
     }
 }

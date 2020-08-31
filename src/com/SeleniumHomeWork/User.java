@@ -36,7 +36,7 @@ public class User {
         this.email = "test" + getRandomNum(5) + "@gmail.com";
         this.password = "TestPassw" + getRandomNum(4);
         this.gender = (int) (Math.random() * 1 + 1);
-        this.position = (int) (Math.random() * 2 + 2);
+        this.position = (int) (Math.random() * 3 + 1);
         System.out.printf(
                             "\n--- User Info ---\n" +
                             "firstName: %s lastName: %s\n" +
